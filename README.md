@@ -12,16 +12,25 @@ Phase 2 is complete! The Daily Circuit feature allows users to solve a daily EnT
 - Correct answers increment their gamified streak (`current_streak`) in the database.
 - Detailed explanations are revealed upon success or failure.
 
+## 📚 Phase 3 Completion: The Practice Engine
+Phase 3 is complete! The interactive Practice Engine allows users to take topic-wise mock tests.
+- A responsive grid layout allows topic selection.
+- The server securely fetches and shuffles a pool of topic-specific questions, selecting 5 at random.
+- The highly interactive Client UI provides instant feedback (coloring correct/incorrect options).
+- Explanations fade in immediately upon answering.
+- Final scores are tallied and presented in a sleek completion screen.
+
 ### Setup Instructions
 1. Open `.env.local` and replace the placeholder values with your actual Supabase URL and Anon Key.
-2. Run the SQL script found in `supabase_setup.sql` in your Supabase SQL Editor.
-3. Run the SQL script found in `supabase_phase2.sql` in your Supabase SQL Editor to apply Phase 2 schemas.
-4. Install dependencies: `npm install`
-5. Run the development server: `npm run dev`
+2. Run the SQL scripts in order in your Supabase SQL Editor:
+   - `supabase_setup.sql` (Base Auth schema & users table)
+   - `supabase_phase2.sql` (Daily Circuits schema)
+   - `supabase_phase3.sql` (Practice Engine schema & mock questions)
+3. Install dependencies: `npm install`
+4. Run the development server: `npm run dev`
 
 ### Project Structure
-- `src/app`: Contains Next.js routes. The `/daily` route handles the daily puzzle UI.
-- `src/components/layout`: Contains responsive shell components.
-- `src/utils/supabase`: Contains Supabase Auth clients.
-- `supabase_setup.sql`: Base Phase 1 database schema.
-- `supabase_phase2.sql`: Phase 2 database updates (Daily Circuits).
+- `src/app`: Contains Next.js routes. `/daily` handles daily puzzles, `/practice` handles the mock tests.
+- `src/components`: UI components.
+- `src/utils/supabase`: Supabase Auth clients.
+- `*.sql`: Database migrations.
