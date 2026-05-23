@@ -3,9 +3,10 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { updatePracticeStats } from "../actions"
+import { submitReport } from "../../contribute/actions"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, XCircle } from "lucide-react"
+import { CheckCircle2, XCircle, Flag, AlertTriangle } from "lucide-react"
 
 interface Question {
   id: string
@@ -23,6 +24,11 @@ export function QuizClient({ questions }: { questions: Question[] }) {
   const [isAnswered, setIsAnswered] = useState(false)
   const [score, setScore] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+  const [reportIssueType, setReportIssueType] = useState('wrong_answer')
+  const [reportDescription, setReportDescription] = useState('')
+  const [isSubmittingReport, setIsSubmittingReport] = useState(false)
   
   const router = useRouter()
 
@@ -75,6 +81,16 @@ export function QuizClient({ questions }: { questions: Question[] }) {
     }
   }
 
+  const handleReportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmittingReport(true)
+    await submitReport(question.id, reportIssueType, reportDescription)
+    setIsSubmittingReport(false)
+    setIsReportModalOpen(false)
+    setReportDescription('')
+    alert("Report submitted successfully! Thank you.")
+  }
+
   return (
     <div className="space-y-6 animate-in slide-in-from-right-8 fade-in duration-300" key={currentIndex}>
       <div className="flex justify-between items-center text-sm font-medium text-gray-500">
@@ -83,12 +99,19 @@ export function QuizClient({ questions }: { questions: Question[] }) {
       </div>
 
       <Card className="shadow-md border-t-4 border-t-blue-500">
-        <CardHeader>
-          <CardTitle className="text-xl leading-relaxed">
+        <CardHeader className="flex flex-row items-start justify-between pb-2">
+          <CardTitle className="text-xl leading-relaxed pr-4">
             {question.question_text}
           </CardTitle>
+          <button 
+            onClick={() => setIsReportModalOpen(true)}
+            className="text-gray-400 hover:text-red-500 transition-colors p-1"
+            title="Report Error"
+          >
+            <Flag className="w-5 h-5" />
+          </button>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-3 pt-4">
           {question.options.map((option, idx) => {
             const isSelected = selectedOption === option
             const isCorrect = option === question.correct_answer
@@ -137,6 +160,52 @@ export function QuizClient({ questions }: { questions: Question[] }) {
               {currentIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
             </Button>
           </div>
+        </div>
+      )}
+
+      {/* Report Modal */}
+      {isReportModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <Card className="w-full max-w-md mx-auto animate-in fade-in zoom-in-95">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-red-500" />
+                Report Error
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleReportSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Issue Type</label>
+                  <select 
+                    value={reportIssueType}
+                    onChange={(e) => setReportIssueType(e.target.value)}
+                    className="w-full border rounded-md p-2 bg-white dark:bg-gray-950"
+                  >
+                    <option value="wrong_answer">Wrong Answer</option>
+                    <option value="typo">Typo / Grammar</option>
+                    <option value="confusing">Confusing Explanation</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Description (Optional)</label>
+                  <textarea 
+                    value={reportDescription}
+                    onChange={(e) => setReportDescription(e.target.value)}
+                    className="w-full border rounded-md p-2 bg-white dark:bg-gray-950"
+                    rows={3}
+                  />
+                </div>
+                <div className="flex justify-end gap-2 pt-4">
+                  <Button type="button" variant="outline" onClick={() => setIsReportModalOpen(false)}>Cancel</Button>
+                  <Button type="submit" disabled={isSubmittingReport}>
+                    {isSubmittingReport ? 'Submitting...' : 'Submit Report'}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>

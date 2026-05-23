@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Cpu, Zap, Radio, Activity, Network } from 'lucide-react'
+import { AdPlaceholder } from '@/components/layout/AdPlaceholder'
 
 const TOPICS = [
   {
@@ -51,6 +52,10 @@ export default function PracticePage() {
       <div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Practice Topics</h1>
         <p className="text-gray-500 mt-2">Select a topic to start a 5-question mock test.</p>
+      </div>
+
+      <div className="w-full flex justify-center">
+        <AdPlaceholder size="leaderboard" position="practice-topic-grid" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
