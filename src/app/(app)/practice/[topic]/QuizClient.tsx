@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { updatePracticeStats } from "../actions"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { CheckCircle2, XCircle } from "lucide-react"
@@ -59,13 +60,18 @@ export function QuizClient({ questions }: { questions: Question[] }) {
     }
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(prev => prev + 1)
       setSelectedOption(null)
       setIsAnswered(false)
     } else {
       setIsComplete(true)
+      
+      // Update stats in the backend
+      if (questions.length > 0) {
+        await updatePracticeStats(questions[0].topic, score, questions.length)
+      }
     }
   }
 

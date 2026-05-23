@@ -20,6 +20,13 @@ Phase 3 is complete! The interactive Practice Engine allows users to take topic-
 - Explanations fade in immediately upon answering.
 - Final scores are tallied and presented in a sleek completion screen.
 
+## 📊 Phase 4 Completion: User Dashboard
+Phase 4 is complete! The User Dashboard (`/dashboard`) provides a highly visual overview of the user's progress.
+- Built strictly with Next.js Server Components for instantaneous, zero-loading-spinner performance.
+- Pulls live data (`current_streak`, `stats`) securely from Supabase via `@supabase/ssr`.
+- Visually emphasizes gamification using an orange-themed 'Current Streak' flame card.
+- Dynamically calculates user accuracy and visualizes Topic Mastery using sleek Tailwind progress bars.
+
 ### Setup Instructions
 1. Open `.env.local` and replace the placeholder values with your actual Supabase URL and Anon Key.
 2. Run the SQL scripts in order in your Supabase SQL Editor:
@@ -28,9 +35,3 @@ Phase 3 is complete! The interactive Practice Engine allows users to take topic-
    - `supabase_phase3.sql` (Practice Engine schema & mock questions)
 3. Install dependencies: `npm install`
 4. Run the development server: `npm run dev`
-
-### Project Structure
-- `src/app`: Contains Next.js routes. `/daily` handles daily puzzles, `/practice` handles the mock tests.
-- `src/components`: UI components.
-- `src/utils/supabase`: Supabase Auth clients.
-- `*.sql`: Database migrations.
